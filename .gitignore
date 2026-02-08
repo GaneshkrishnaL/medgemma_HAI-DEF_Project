@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+
+# Streamlit
+.streamlit/
+
+# Database and Logs
+*.db
+*.jsonl
+metrics_log.jsonl
+
+# OS
+.DS_Store
+
+# Hugging Face caches (if any in local dir)
+.cache/
+hub/

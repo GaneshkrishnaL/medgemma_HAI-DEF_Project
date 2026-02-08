@@ -1,0 +1,9 @@
+streamlit
+transformers
+torch
+accelerate
+bitsandbytes
+sentencepiece
+protobuf
+python-dotenv
+jsonlines
