@@ -7,3 +7,7 @@ sentencepiece
 protobuf
 python-dotenv
 jsonlines
+librosa
+soundfile
+pandas
+plotly
