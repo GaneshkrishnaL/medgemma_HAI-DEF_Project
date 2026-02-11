@@ -7,7 +7,7 @@ from app.models.medasr import MedASRClient
 from app.core.orchestrator import Orchestrator
 from app.db.store import init_db, get_recent_records
 
-st.set_page_config(page_title="MedGemma Copilot", layout="wide")
+st.set_page_config(page_title="MedGemma-Copilot", layout="wide")
 
 @st.cache_resource
 def load_models():
@@ -19,11 +19,11 @@ def main():
     init_db()
     orch = load_models()
 
-    st.title("🩺 MedGemma Copilot — Visit Prep + Report/Scan Q&A")
+    st.title("🩺 Custom MedGemma Copilot")
 
     with st.sidebar:
         st.header("User")
-        user_id = st.text_input("User ID", value="demo_user")
+        user_id = st.text_input("User ID", value="ganesh_demo_user")
         st.divider()
         st.subheader("Recent history")
         recents = get_recent_records(user_id, limit=8)
@@ -41,19 +41,20 @@ def main():
 
         pasted_text = st.text_area("Paste report text / doctor notes (optional)", height=220)
 
-        st.markdown("**Voice (optional):**")
-        audio_file = st.file_uploader("Upload audio (wav/mp3/m4a)", type=["wav", "mp3", "m4a"])
+        st.markdown("**Live Voice / MicroPhone:**")
+        audio_recorded = st.audio_input("Record your question")
 
-        transcribed = None
-        if audio_file:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-                tmp.write(audio_file.read())
-                tmp_path = tmp.name
-            if st.button("Transcribe audio"):
+        if audio_recorded and ("last_audio" not in st.session_state or st.session_state.get("last_audio") != audio_recorded.name):
+            with st.spinner("Transcribing..."):
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+                    tmp.write(audio_recorded.read())
+                    tmp_path = tmp.name
                 transcribed = orch.transcribe_if_audio(tmp_path)
                 st.session_state["transcribed"] = transcribed
+                st.session_state["last_audio"] = audio_recorded.name
+                st.rerun()
 
-        if "transcribed" in st.session_state and st.session_state["transcribed"]:
+        if st.session_state.get("transcribed"):
             st.info("Transcription ready — you can edit it below.")
             st.session_state["question"] = st.text_area(
                 "Transcribed question (editable)",

@@ -57,10 +57,14 @@ class MedGemmaClient:
         # Use greedy decoding if temperature is 0 or very low for stability
         do_sample = temperature > 0.01
 
+        input_len = inputs["input_ids"].shape[1]
+
         out = self.model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,
             do_sample=do_sample,
             temperature=temperature if do_sample else None,
         )
-        return self.processor.decode(out[0], skip_special_tokens=True).strip()
+        # Only decode the newly generated tokens
+        new_tokens = out[0][input_len:]
+        return self.processor.decode(new_tokens, skip_special_tokens=True).strip()
