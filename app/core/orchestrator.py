@@ -1,9 +1,7 @@
-import time
 from PIL import Image
 from app.core.prompts import build_user_prompt
 from app.core.guardrails import run_guardrails
 from app.core.metrics import log_event, has_required_sections, groundedness_proxy
-from app.db.store import add_record
 
 class Orchestrator:
     def __init__(self, medgemma_client, medasr_client=None):
@@ -38,16 +36,7 @@ class Orchestrator:
             "groundedness_proxy": ground
         })
 
-        # Store record
-        add_record(
-            user_id=user_id,
-            created_at=int(time.time()),
-            question=user_question,
-            pasted_text=pasted_text,
-            answer=answer
-        )
-
-        # If urgent symptoms, prepend a cautious note (still not diagnosing)
+        # If urgent symptoms, prepend a cautious note
         if gr.urgency == "urgent":
             answer = (
                 "⚠️ **Urgent note:** Some symptoms you mentioned can be serious. "
