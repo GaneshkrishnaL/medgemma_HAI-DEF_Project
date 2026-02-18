@@ -1,4 +1,4 @@
-# MedGemma Copilot Pro 🩺
+# MedGemma Copilot Pro 
 
 MedGemma Copilot Pro is an advanced medical AI assistant for patient education, doctor-visit preparation, and personal health tracking. It leverages Google's **MedGemma 1.5-4b-it** (multimodal) and **MedASR** to provide a comprehensive health companion experience.
 
